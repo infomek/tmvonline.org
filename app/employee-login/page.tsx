@@ -1,0 +1,125 @@
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import Image from "next/image"
+import Link from "next/link"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+
+export default function EmployeeLoginPage() {
+  const [employeeId, setEmployeeId] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const router = useRouter()
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    // Demo credentials for employee login
+    if (employeeId === "EMP001" && password === "admin123") {
+      localStorage.setItem(
+        "employeeData",
+        JSON.stringify({
+          name: "TMV Administrator",
+          employeeId: employeeId,
+          loginTime: new Date().toISOString(),
+        }),
+      )
+      router.push("/employee-dashboard")
+    } else {
+      setError("Invalid Employee ID or Password. Please try again.")
+    }
+  }
+
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bg1-GHzYrsjV72prXkjmK5eTANDoacjMAH.png')`,
+      }}
+    >
+      <div className="w-full max-w-md p-6">
+        <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">
+          <CardHeader className="text-center space-y-4">
+            <div className="flex justify-center">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tmvlogo-oUqkRVW3nXxREA2BVzQsP1i7zP8G8K.png"
+                alt="TMV Logo"
+                width={100}
+                height={100}
+                className="rounded-full"
+              />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-bold text-blue-600">Employee Login</CardTitle>
+              <CardDescription className="text-gray-600 mt-2">Tilak Maharashtra Vidyapeeth</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              {error && (
+                <Alert className="border-red-200 bg-red-50">
+                  <AlertDescription className="text-red-700">{error}</AlertDescription>
+                </Alert>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="employeeId">Employee ID</Label>
+                <Input
+                  id="employeeId"
+                  type="text"
+                  placeholder="Enter your Employee ID"
+                  value={employeeId}
+                  onChange={(e) => setEmployeeId(e.target.value)}
+                  required
+                  className="w-full"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full"
+                />
+              </div>
+
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                Login
+              </Button>
+            </form>
+
+            <div className="mt-6 space-y-3 text-center">
+              <div>
+                <Link href="/forgot-password" className="text-blue-600 hover:underline text-sm">
+                  Forgot Password?
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-xs text-gray-700">
+                <strong>Note:</strong> For technical support and login issues, please contact the IT department.
+              </p>
+              <p className="text-xs text-blue-600 mt-2">
+                <strong>Support Email:</strong> tmvexam@tmv.edu.in
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
